@@ -41,8 +41,10 @@ def get_cats():
     cur = con.cursor()
     cur.execute("SELECT * FROM cats")
     cats = cur.fetchall()
+    cats_array = []
+    cats_array.append(jsonify(cats))
     con.close()
-    return jsonify(cats)
+    return render_template("cats.html", catsarray = cats_array)
 
 @app.route("/add", methods = ["POST", "GET"])
 def add_info():
@@ -61,7 +63,6 @@ def submit():
     con.close()
     return redirect(url_for("get_cats"))
     #Submit
-
 
 if __name__ == "__main__":
     app.run()

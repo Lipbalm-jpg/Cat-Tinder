@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Cats</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #111;
+            color: white;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            border: none;
+        }
+
+        img {
+            width: 300px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid white;
+        }
+    </style>
+
+    <script>
+        var mycatsarray;
+        (mycatsarray = { catsarray });
+    </script>
+
+</head>
+
+<body>
+
+    <h1>{{ catsarray }}</h1>
+
+    <div id="datadiv" data-catsarray='{{ catsarray }}'></div>
+    
+    <script src="../static/cats.js"></script>
+
+</body>
+
+</html>
