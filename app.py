@@ -41,10 +41,22 @@ def get_cats():
     cur = con.cursor()
     cur.execute("SELECT * FROM cats")
     cats = cur.fetchall()
-    cats_array = []
-    cats_array.append(jsonify(cats))
+    results = [
+        {"id": cat[0], "name": cat[1], "age": cat[2], "bio": cat[3], "image": cat[4]}
+        for cat in cats
+    ]
     con.close()
-    return render_template("cats.html", catsarray = cats_array)
+    print(results)
+    return render_template("cats.html", catsarray = results)
+
+@app.route("/catsdata", methods = ["GET"])
+def get_data():
+    con = get_db()
+    cur = con.cursor()
+    cur.execute("SELECT * FROM cats")
+    cats = cur.fetchall()
+    con.close()
+    return jsonify(cats)
 
 @app.route("/add", methods = ["POST", "GET"])
 def add_info():
