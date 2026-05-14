@@ -13,10 +13,7 @@ fetch("/catsdata")
         catdiv.textContent = acatarray[i][1];
         let tupperwarediv = document.createElement("div");
         let catbutton = document.createElement("button");
-        catbutton.onClick = () => {
-            localStorage.setItem("userID", this.dataset.id);
-        window.location.href = '../';
-        }
+        catbutton.onclick = catClick;
 
         catbutton.dataset.id = i + 1;
         tupperwarediv.appendChild(catdiv);
@@ -27,3 +24,8 @@ fetch("/catsdata")
     }
 }
 );
+
+function catClick() {
+    localStorage.setItem("userID", this.dataset.id);
+    window.location.href = '../';
+}

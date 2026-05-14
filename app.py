@@ -76,5 +76,19 @@ def submit():
     return redirect(url_for("get_cats"))
     #Submit
 
+@app.route("/loadprofile")
+def showProfile():
+    return render_template("profile.html")
+
+@app.route("/loadchunk", methods = ["GET", "POST"])
+def loadchunk():
+    con = get_db()
+    cur = con.cursor()
+    cur.execute("SELECT * FROM cats WHERE id !=" + str(request.values))
+    cats = cur.fetchall()
+    con.close()
+    # print(request.values)
+    return jsonify(cats)
+
 if __name__ == "__main__":
     app.run()
