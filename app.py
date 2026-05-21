@@ -84,10 +84,10 @@ def showProfile():
 def loadchunk():
     con = get_db()
     cur = con.cursor()
-    cur.execute("SELECT * FROM cats WHERE id !=" + str(request.values))
+    cur.execute("SELECT * FROM cats WHERE id !=" + str(request.args.get('query')))
     cats = cur.fetchall()
     con.close()
-    # print(request.values)
+    print(request.values)
     return jsonify(cats)
 
 if __name__ == "__main__":
