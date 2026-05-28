@@ -23,6 +23,14 @@ def init_db():
         age TINYINT,
         bio TEXT,
         image BLOB
+
+    )
+    CREATE TABLE IF NOT EXISTS likes (
+        receiverid INTEGER,
+        likeid INTEGER,
+        PRIMARY KEY (receiverid, likeid),
+        FOREIGN KEY (likeid) REFERENCES cats (id),
+        FOREIGN KEY (receiverid) REFERENCES cats (id)
     )
     """
     )
@@ -89,6 +97,14 @@ def loadchunk():
     con.close()
     print(request.values)
     return jsonify(cats)
+
+@app.route("/swipe", methods = ["POST"])
+def swipeRight():
+    con = get_db()
+    cur = con.cursor()receiverid
+    cur.execute("INSERT INTO likes VALUES (" + str(request.args.get('receiverid')) ", " + str(request.args.get('likeid')) + ")")
+    con.close()
+    return ("Hello world!")
 
 if __name__ == "__main__":
     app.run()
