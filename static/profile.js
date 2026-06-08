@@ -17,12 +17,12 @@ fetch("/loadchunk?query=" + userInfo, {"userInfo": userInfo})
     nameDisplay.textContent = userData[0][1];
     ageDisplay.textContent = userData[0][2];
     bioDisplay.textContent = userData[0][3];
-    imageDisplay.src = userData[0][4];
+    imageDisplay.src = "/image/?cat_id=" + userData[catIndex][0];
     
 });
 
 function updateCat() {
-    catIndex++;
+    catIndex = (catIndex + 1) % userData.length;
     nameDisplay.textContent = userData[catIndex][1];
     ageDisplay.textContent = userData[catIndex][2];
     bioDisplay.textContent = userData[catIndex][3];
@@ -30,7 +30,17 @@ function updateCat() {
 }
 
 function swipeRight() {
-    fetch("/swipe?receiverid=" + receiverid + "&likeid=" + likeid)
+    fetch("/swipe?receiverid=" + userData[catIndex][0] + "&likeid=" + userInfo, {
+        method: "POST",
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({receiverid: userData[catIndex][0], likeid: userInfo})
+    })
     .then(response => console.log(response));
     updateCat();
+}
+
+function printLikes() {
+    fetch("/likesData")
+    .then(response => response.json())
+    .then(data => console.log(data));
 }

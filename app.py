@@ -1,5 +1,6 @@
 from flask import Flask, request, redirect, url_for, jsonify, render_template
 import sqlite3
+import re
 
 app = Flask(__name__)
 
@@ -25,6 +26,9 @@ def init_db():
         image BLOB
 
     )
+    """)
+
+    cur.execute(""" 
     CREATE TABLE IF NOT EXISTS likes (
         receiverid INTEGER,
         likeid INTEGER,
@@ -66,16 +70,27 @@ def get_data():
     con.close()
     return jsonify(cats)
 
+@app.route("/likesData", methods = ["GET"])
+def get_likes():
+    con = get_db()
+    cur = con.cursor()
+    cur.execute("SELECT * FROM likes")
+    likes = cur.fetchall()
+    con.close()
+    return jsonify(likes)
+
 @app.route("/add", methods = ["POST", "GET"])
 def add_info():
     return render_template("add.html")
 
 @app.route("/submit", methods = ["POST"])
 def submit():
+    file = request.files.get("image")
     catname = request.form.get("name")
     catage = request.form.get("age")
     catbio = request.form.get("bio")
-    catimage = request.form.get("image")
+    if file: 
+        catimage = file.read()
     con = get_db()
     cur = con.cursor()
     cur.execute("INSERT INTO cats (name, age, bio, image) VALUES (?, ?, ?, ?)", (catname, catage, catbio, catimage))
@@ -101,10 +116,20 @@ def loadchunk():
 @app.route("/swipe", methods = ["POST"])
 def swipeRight():
     con = get_db()
-    cur = con.cursor()receiverid
-    cur.execute("INSERT INTO likes VALUES (" + str(request.args.get('receiverid')) ", " + str(request.args.get('likeid')) + ")")
+    cur = con.cursor()
+    cur.execute("INSERT OR IGNORE INTO likes VALUES (" + str(request.args.get('receiverid')) + ", " + str(request.args.get('likeid')) + ")")
+    con.commit()
     con.close()
     return ("Hello world!")
+
+@app.route("/image")
+def get_Image():
+    con = get_db()
+    cur = con.cursor()
+    cur.execute("SELECT image FROM cats WHERE id=?", (cat_id, ))
+    row = cur.fetchone()
+    con.close()
+    return (row[0], 200, {"Content-Type":"image/jpeg"})
 
 if __name__ == "__main__":
     app.run()
