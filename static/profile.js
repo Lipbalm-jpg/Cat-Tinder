@@ -17,7 +17,7 @@ fetch("/loadchunk?query=" + userInfo, {"userInfo": userInfo})
     nameDisplay.textContent = userData[0][1];
     ageDisplay.textContent = userData[0][2];
     bioDisplay.textContent = userData[0][3];
-    imageDisplay.src = "/image/?cat_id=" + userData[catIndex][0];
+    imageDisplay.src = "/image?cat_id=" + userData[catIndex][0];
     
 });
 
@@ -26,7 +26,7 @@ function updateCat() {
     nameDisplay.textContent = userData[catIndex][1];
     ageDisplay.textContent = userData[catIndex][2];
     bioDisplay.textContent = userData[catIndex][3];
-    userData[catIndex][4]?imageDisplay.src = userData[catIndex][4]:imageDisplay.src = "../static/IMG/fluffington.jpg";
+    imageDisplay.src = "/image?cat_id=" + (userData[catIndex][0]);
 }
 
 function swipeRight() {

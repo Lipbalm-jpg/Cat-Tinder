@@ -14,8 +14,11 @@ fetch("/catsdata")
         let tupperwarediv = document.createElement("div");
         let catbutton = document.createElement("button");
         catbutton.onclick = catClick;
+        let cat_image = document.createElement("img");
+        cat_image.src = "/image?cat_id=" + acatarray[i][0];
 
         catbutton.dataset.id = i + 1;
+        catbutton.appendChild(cat_image);
         tupperwarediv.appendChild(catdiv);
         datadiv.appendChild(tupperwarediv);
         tupperwarediv.appendChild(catbutton);

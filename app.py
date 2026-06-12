@@ -65,7 +65,7 @@ def get_cats():
 def get_data():
     con = get_db()
     cur = con.cursor()
-    cur.execute("SELECT * FROM cats")
+    cur.execute("SELECT id, name, age, bio FROM cats")
     cats = cur.fetchall()
     con.close()
     return jsonify(cats)
@@ -85,6 +85,7 @@ def add_info():
 
 @app.route("/submit", methods = ["POST"])
 def submit():
+    catimage = None
     file = request.files.get("image")
     catname = request.form.get("name")
     catage = request.form.get("age")
@@ -107,7 +108,7 @@ def showProfile():
 def loadchunk():
     con = get_db()
     cur = con.cursor()
-    cur.execute("SELECT * FROM cats WHERE id !=" + str(request.args.get('query')))
+    cur.execute("SELECT id, name, age, bio FROM cats WHERE id !=" + str(request.args.get('query')))
     cats = cur.fetchall()
     con.close()
     print(request.values)
@@ -122,13 +123,17 @@ def swipeRight():
     con.close()
     return ("Hello world!")
 
-@app.route("/image")
+@app.route("/image", methods = ["GET"])
 def get_Image():
     con = get_db()
     cur = con.cursor()
-    cur.execute("SELECT image FROM cats WHERE id=?", (cat_id, ))
+    cur.execute("SELECT image FROM cats WHERE id=?", (request.args.get('cat_id'),))
     row = cur.fetchone()
     con.close()
+    if row is None:
+        return("Cat not found", 404)
+    if row[0] is None:
+        return(redirect(url_for('static', filename='IMG/fluffington.jpg')))
     return (row[0], 200, {"Content-Type":"image/jpeg"})
 
 if __name__ == "__main__":
