@@ -118,10 +118,14 @@ def loadchunk():
 def swipeRight():
     con = get_db()
     cur = con.cursor()
-    cur.execute("INSERT OR IGNORE INTO likes VALUES (" + str(request.args.get('receiverid')) + ", " + str(request.args.get('likeid')) + ")")
+    cur.execute("INSERT OR IGNORE INTO likes  (" + str(request.args.get('receiverid')) + ", " + str(request.args.get('likeid')) + ")")
     con.commit()
+    cur.execute("SELECT A.receiverid AS likedCatA, B.receiverid AS likedCatB, A.likeid AS likerCatA, B.likeid AS likerCatB FROM likes A, likes B WHERE likedCatA = likerCatB AND likedCatB = likerCatA AND likedCatA < likedCatB AND likerCatA = " + str(request.args.get('receiverid')))
     con.close()
-    return ("Hello world!")
+    result = cur.fetchone()
+    if result:
+        return("It's a match!")    
+    return("Hello world!")
 
 @app.route("/image", methods = ["GET"])
 def get_Image():
@@ -135,6 +139,21 @@ def get_Image():
     if row[0] is None:
         return(redirect(url_for('static', filename='IMG/fluffington.jpg')))
     return (row[0], 200, {"Content-Type":"image/jpeg"})
+
+@app.route("/matches", methods = ["GET"])
+def get_Matches():
+    con = get_db()
+    cur = con.cursor()
+    cur.execute("""
+    SELECT A.receiverid AS likedCatA, B.receiverid AS likedCatB, A.likeid AS likerCatA, B.likeid AS likerCatB 
+    FROM likes A, likes B
+    WHERE likedCatA = likerCatB
+    AND likedCatB = likerCatA
+    AND likedCatA < likedCatB
+    """)
+    row = cur.fetchall()
+    con.close()
+    return jsonify(row)
 
 if __name__ == "__main__":
     app.run()

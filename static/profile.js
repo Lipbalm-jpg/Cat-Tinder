@@ -39,6 +39,12 @@ function swipeRight() {
     updateCat();
 }
 
+function printMatches() {
+    fetch("/matches")
+    .then(response => response.json())
+    .then(data => console.log(data));
+}
+
 function printLikes() {
     fetch("/likesData")
     .then(response => response.json())
