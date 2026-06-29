@@ -118,14 +118,17 @@ def loadchunk():
 def swipeRight():
     con = get_db()
     cur = con.cursor()
-    cur.execute("INSERT OR IGNORE INTO likes  (" + str(request.args.get('receiverid')) + ", " + str(request.args.get('likeid')) + ")")
+    cur.execute("INSERT OR IGNORE INTO likes  (receiverid, likeid) VALUES (?,?)", (str(request.args.get('receiverid')), str(request.args.get('likeid'))))
+    # cur.execute("INSERT OR IGNORE INTO likes  (" + str(request.args.get('receiverid')) + ", " + str(request.args.get('likeid')) + ")")
     con.commit()
     cur.execute("SELECT A.receiverid AS likedCatA, B.receiverid AS likedCatB, A.likeid AS likerCatA, B.likeid AS likerCatB FROM likes A, likes B WHERE likedCatA = likerCatB AND likedCatB = likerCatA AND likedCatA < likedCatB AND likerCatA = " + str(request.args.get('receiverid')))
-    con.close()
     result = cur.fetchone()
+    con.close()
     if result:
-        return("It's a match!")    
-    return("Hello world!")
+        print("result")
+        return(jsonify(result))
+    print("not result")
+    return(jsonify("Hello world!"))
 
 @app.route("/image", methods = ["GET"])
 def get_Image():

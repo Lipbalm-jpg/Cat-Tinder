@@ -35,7 +35,14 @@ function swipeRight() {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({receiverid: userData[catIndex][0], likeid: userInfo})
     })
-    .then(response => console.log(response));
+    .then(response => {return(response)})
+    .then(response => {
+        console.log(response.json())
+        if (response.json() != "Hello world!") {
+            window.alert("It's a match!")
+        }
+    })
+    .then(data => console.log(data));
     updateCat();
 }
 
